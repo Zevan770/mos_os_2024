@@ -13,4 +13,4 @@ code/main.o: code/main.c
 
 .PHONY: all clean
 clean:
-	rm -f code/*.o fibo
+	rm -f code/*.o 
