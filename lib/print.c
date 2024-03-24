@@ -20,7 +20,8 @@ void vprintfmt(fmt_callback_t out, void *data, const char *fmt, va_list ap) {
 		/* scan for the next '%' */
 		/* Exercise 1.4: Your code here. (1/8) */
         while (*fmt != '%' && *fmt != '\0') {
-            print_char(out, data, *fmt, 0, 0);
+            // print_char(out, data, *fmt, 0, 0);
+            out(data, fmt, 1);
             fmt++;
         }
 
@@ -36,6 +37,7 @@ void vprintfmt(fmt_callback_t out, void *data, const char *fmt, va_list ap) {
 
 		/* we found a '%' */
 		/* Exercise 1.4: Your code here. (4/8) */
+        fmt++;
 
 		/* check format flag */
 		/* Exercise 1.4: Your code here. (5/8) */
@@ -63,6 +65,7 @@ void vprintfmt(fmt_callback_t out, void *data, const char *fmt, va_list ap) {
         long_flag = 0;
         if (*fmt == 'l') {
             long_flag = 1;
+            fmt++;
         }
 
 		neg_flag = 0;
