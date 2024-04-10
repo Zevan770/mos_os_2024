@@ -141,7 +141,6 @@ void mips_init(u_int argc, char **argv, char **penv, u_int ram_low_size) {
 	mips_vm_init();
 	page_init();
 
-    // printk("init");
 	page_check();
 	page_strong_check();
 	halt();
