@@ -121,7 +121,8 @@
             (listelm)->field.le_next->field.le_prev = &(elm)->field.le_next;   \
         }                                                                      \
         (listelm)->field.le_next = (elm);                                      \
-        (elm)->field.le_prev = &(listelm)->field.le_next;
+        (elm)->field.le_prev = &(listelm)->field.le_next;                      \
+    } while (0)
 
 /*
  * Insert the element "elm" *before* the element "listelm" which is

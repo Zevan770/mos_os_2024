@@ -94,16 +94,30 @@ void page_init(void) {
 	/* Step 1: Initialize page_free_list. */
 	/* Hint: Use macro `LIST_INIT` defined in include/queue.h. */
 	/* Exercise 2.3: Your code here. (1/4) */
+    // printk("LIST_INIT start\n"); // TEST
+    LIST_INIT(&page_free_list);
+    // printk("LIST_INIT OK\n"); //TEST
 
-	/* Step 2: Align `freemem` up to multiple of PAGE_SIZE. */
+    /* Step 2: Align `freemem` up to multiple of PAGE_SIZE. */
 	/* Exercise 2.3: Your code here. (2/4) */
+    // printk("freemem: %x before ALIGN\n", freemem); // TEST
+    freemem = ROUND(freemem, PAGE_SIZE);
+    // printk("freemem: %x ALIGN OK\n", freemem); // TEST
 
-	/* Step 3: Mark all memory below `freemem` as used (set `pp_ref` to 1) */
+    /* Step 3: Mark all memory below `freemem` as used (set `pp_ref` to 1) */
 	/* Exercise 2.3: Your code here. (3/4) */
+    for (int i = 0; i < freemem / PAGE_SIZE; i++) {
+        pages[i].pp_ref = 1;
+    }
 
-	/* Step 4: Mark the other memory as free. */
+    /* Step 4: Mark the other memory as free. */
 	/* Exercise 2.3: Your code here. (4/4) */
-
+    // printk("memsize: %x npage: %x freemem: %x freemem/PAGE_SIZE: %x\n", memsize,
+    //        npage, freemem, freemem / PAGE_SIZE);
+    for (int i = npage - 1; i >= 0; i--) {
+        pages[i].pp_ref = 0;
+        LIST_INSERT_HEAD(&page_free_list, &pages[i], pp_link);
+    }
 }
 
 /* Overview:
@@ -123,14 +137,20 @@ int page_alloc(struct Page **new) {
 	/* Step 1: Get a page from free memory. If fails, return the error code.*/
 	struct Page *pp;
 	/* Exercise 2.4: Your code here. (1/2) */
+    if (LIST_EMPTY(&page_free_list)) {
+        return -E_NO_MEM;
+    }
 
-	LIST_REMOVE(pp, pp_link);
+    pp = LIST_FIRST(&page_free_list);
+
+    LIST_REMOVE(pp, pp_link);
 
 	/* Step 2: Initialize this page with zero.
 	 * Hint: use `memset`. */
 	/* Exercise 2.4: Your code here. (2/2) */
+    memset(page2kva(pp), 0, PAGE_SIZE);
 
-	*new = pp;
+    *new = pp;
 	return 0;
 }
 
@@ -144,7 +164,7 @@ void page_free(struct Page *pp) {
 	assert(pp->pp_ref == 0);
 	/* Just insert it into 'page_free_list'. */
 	/* Exercise 2.5: Your code here. */
-
+    LIST_INSERT_HEAD(&page_free_list, pp, pp_link);
 }
 
 /* Overview:
@@ -298,8 +318,9 @@ void physical_memory_manage_check(void) {
 
 	// should be able to allocate three pages
 	pp0 = pp1 = pp2 = 0;
-	assert(page_alloc(&pp0) == 0);
-	assert(page_alloc(&pp1) == 0);
+    printk("here");
+    assert(page_alloc(&pp0) == 0);
+    assert(page_alloc(&pp1) == 0);
 	assert(page_alloc(&pp2) == 0);
 
 	assert(pp0);
