@@ -19,8 +19,10 @@ void page_strong_check(void) {
 	assert(pp2 && pp2 != pp1 && pp2 != pp0);
 	assert(pp3 && pp3 != pp2 && pp3 != pp1 && pp3 != pp0);
 	assert(pp4 && pp4 != pp3 && pp4 != pp2 && pp4 != pp1 && pp4 != pp0);
+    //TEST
+    printk("pp ok");
 
-	// temporarily steal the rest of the free pages
+    // temporarily steal the rest of the free pages
 	fl = page_free_list;
 	// now this page_free list must be empty!!!!
 	LIST_INIT(&page_free_list);
@@ -139,6 +141,7 @@ void mips_init(u_int argc, char **argv, char **penv, u_int ram_low_size) {
 	mips_vm_init();
 	page_init();
 
+    // printk("init");
 	page_check();
 	page_strong_check();
 	halt();

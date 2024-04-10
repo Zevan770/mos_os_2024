@@ -201,18 +201,18 @@ static int pgdir_walk(Pde *pgdir, u_long va, int create, Pte **ppte) {
 	/* Exercise 2.6: Your code here. (2/3) */
     if (!(*pgdir_entryp & PTE_V)) {
         if(create) {
-            page_alloc(&pp);
-            if (!pp) {
-                return -E_NO_MEM;
+            int ret = page_alloc(&pp);
+            if (ret < 0) {
+                return ret;
             }
-            pp->pp_ref = 1;
+            pp->pp_ref++;
+        } else {
+            *ppte = NULL;
+            return 0;
         }
-        ppte = page2kva(pp);
+        // ppte = page2kva(pp);
         *pgdir_entryp = PADDR((Pte *)page2kva(pp)) | PTE_V | PTE_C_CACHEABLE;
-    } else {
-        *ppte = NULL;
-        return 0;
-    }
+    } 
 
     /* Step 3: Assign the kernel virtual address of the page table entry to '*ppte'. */
 	/* Exercise 2.6: Your code here. (3/3) */
@@ -257,12 +257,11 @@ int page_insert(Pde *pgdir, u_int asid, struct Page *pp, u_long va, u_int perm) 
     /* Step 3: Re-get or create the page table entry. */
 	/* If failed to create, return the error. */
 	/* Exercise 2.7: Your code here. (2/3) */
-    if (!pte) {
-        int ret = pgdir_walk(pgdir, va, 1, &pte);
-        if (ret < 0) {
-            return ret;
-        }
+    int ret = pgdir_walk(pgdir, va, 1, &pte);
+    if (ret < 0) {
+        return ret;
     }
+
 
     /* Step 4: Insert the page to the page table entry with 'perm | PTE_C_CACHEABLE | PTE_V'
 	 * and increase its 'pp_ref'. */

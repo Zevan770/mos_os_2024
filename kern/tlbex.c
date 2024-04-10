@@ -57,6 +57,17 @@ void _do_tlb_refill(u_long *pentrylo, u_int va, u_int asid) {
 	 */
 
 	/* Exercise 2.9: Your code here. */
+    // while
+    while (1) {
+        ppte = page_lookup(cur_pgdir, va, NULL); // Find the page table entry for the virtual address
+
+        if (ppte) {
+            break; // Exit the loop if the page table entry is found
+        } else {
+            // Allocate a new page using 'passive_alloc' if 'page_lookup' returns NULL
+            passive_alloc(va, cur_pgdir, asid);
+        }
+    }
 
 	ppte = (Pte *)((u_long)ppte & ~0x7);
 	pentrylo[0] = ppte[0] >> 6;
