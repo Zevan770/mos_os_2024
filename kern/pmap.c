@@ -104,20 +104,35 @@ void page_init(void) {
     freemem = ROUND(freemem, PAGE_SIZE);
     // printk("freemem: %x ALIGN OK\n", freemem); // TEST
 
+    // /* Step 3: Mark all memory below `freemem` as used (set `pp_ref` to 1) */
+	// /* Exercise 2.3: Your code here. (3/4) */
+    // for (int i = 0; i < freemem / PAGE_SIZE; i++) {
+    //     pages[i].pp_ref = 1;
+    // }
+
+    // /* Step 4: Mark the other memory as free. */
+	// /* Exercise 2.3: Your code here. (4/4) */
+    // // printk("memsize: %x npage: %x freemem: %x freemem/PAGE_SIZE: %x\n", memsize,
+    // //        npage, freemem, freemem / PAGE_SIZE);
+    // //TODO
+    // for (int i = freemem / PAGE_SIZE; i < npage - 1; i++) {
+    //     pages[i].pp_ref = 0;
+    //     LIST_INSERT_HEAD(&page_free_list, &pages[i], pp_link);
+    // }
     /* Step 3: Mark all memory below `freemem` as used (set `pp_ref` to 1) */
 	/* Exercise 2.3: Your code here. (3/4) */
-    for (int i = 0; i < freemem / PAGE_SIZE; i++) {
-        pages[i].pp_ref = 1;
-    }
-
-    /* Step 4: Mark the other memory as free. */
+        int size = PPN(PADDR(freemem));
+	int i;
+	for(i = 0;i < size;i++){
+                 pages[i].pp_ref = 1;
+	}
+	/* Step 4: Mark the other memory as free. */
 	/* Exercise 2.3: Your code here. (4/4) */
-    // printk("memsize: %x npage: %x freemem: %x freemem/PAGE_SIZE: %x\n", memsize,
-    //        npage, freemem, freemem / PAGE_SIZE);
-    for (int i = npage - 1; i >= 0; i--) {
-        pages[i].pp_ref = 0;
-        LIST_INSERT_HEAD(&page_free_list, &pages[i], pp_link);
-    }
+	for(;i<npage;i++){
+		pages[i].pp_ref = 0;
+		LIST_INSERT_HEAD(&page_free_list,pages+i,pp_link);
+	}
+
 }
 
 /* Overview:
@@ -148,7 +163,7 @@ int page_alloc(struct Page **new) {
 	/* Step 2: Initialize this page with zero.
 	 * Hint: use `memset`. */
 	/* Exercise 2.4: Your code here. (2/2) */
-    memset(page2kva(pp), 0, PAGE_SIZE);
+    memset((void *)page2kva(pp), 0, PAGE_SIZE);
 
     *new = pp;
 	return 0;
@@ -202,16 +217,16 @@ static int pgdir_walk(Pde *pgdir, u_long va, int create, Pte **ppte) {
     if (!(*pgdir_entryp & PTE_V)) {
         if(create) {
             int ret = page_alloc(&pp);
-            if (ret < 0) {
+            if (ret != 0) {
                 return ret;
             }
             pp->pp_ref++;
+            *pgdir_entryp = page2pa(pp) | PTE_V | PTE_C_CACHEABLE;
         } else {
             *ppte = NULL;
             return 0;
         }
         // ppte = page2kva(pp);
-        *pgdir_entryp = PADDR((Pte *)page2kva(pp)) | PTE_V | PTE_C_CACHEABLE;
     } 
 
     /* Step 3: Assign the kernel virtual address of the page table entry to '*ppte'. */
@@ -258,7 +273,7 @@ int page_insert(Pde *pgdir, u_int asid, struct Page *pp, u_long va, u_int perm) 
 	/* If failed to create, return the error. */
 	/* Exercise 2.7: Your code here. (2/3) */
     int ret = pgdir_walk(pgdir, va, 1, &pte);
-    if (ret < 0) {
+    if (ret != 0) {
         return ret;
     }
 

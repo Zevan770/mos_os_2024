@@ -190,11 +190,8 @@ static int env_setup_vm(struct Env *e) {
 	struct Page *p;
 	try(page_alloc(&p));
 	/* Exercise 3.3: Your code here. */
-    if (p == NULL) {
-        return -E_NO_MEM;
-    }
     p->pp_ref++;
-    e->env_pgdir = (Pde *) page2kva(p);
+    e->env_pgdir = (Pde *)page2kva(p);
 
     /* Step 2: Copy the template page directory 'base_pgdir' to 'e->env_pgdir'. */
 	/* Hint:
@@ -492,7 +489,7 @@ void env_run(struct Env *e) {
 	 *    returning to the kernel caller, making 'env_run' a 'noreturn' function as well.
 	 */
 	/* Exercise 3.8: Your code here. (2/2) */
-    env_pop_tf(&curenv->env_tf, curenv->env_asid);
+    env_pop_tf(&(curenv->env_tf), curenv->env_asid);
 }
 
 void env_check() {
