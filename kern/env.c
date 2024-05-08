@@ -113,7 +113,12 @@ int envid2env(u_int envid, struct Env **penv, int checkperm) {
 	 *   If envid is zero, set 'penv' to 'curenv' and return 0.
 	 *   You may want to use 'ENVX'.
 	 */
-	/* Exercise 4.3: Your code here. (1/2) */
+	/* Exercise okk 4.3: Your code here. (1/2) */
+	if (envid == 0) {
+		*penv = curenv;
+		return 0;
+	}
+	e = &envs[ENVX(envid)];
 
 	if (e->env_status == ENV_FREE || e->env_id != envid) {
 		return -E_BAD_ENV;
@@ -125,9 +130,13 @@ int envid2env(u_int envid, struct Env **penv, int checkperm) {
 	 *   specified env, i.e. 'e' is either 'curenv' or its immediate child.
 	 *   If violated, return '-E_BAD_ENV'.
 	 */
-	/* Exercise 4.3: Your code here. (2/2) */
-
+	/* Exercise okk 4.3: Your code here. (2/2) */
 	/* Step 3: Assign 'e' to '*penv'. */
+	if (checkperm && curenv->env_id != e->env_id &&
+		curenv->env_id != e->env_parent_id) {
+		return -E_BAD_ENV;
+	}
+
 	*penv = e;
 	return 0;
 }

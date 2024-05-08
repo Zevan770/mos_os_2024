@@ -114,7 +114,7 @@
  * assign 'elm.pre' from a proper value.
  */
 #define LIST_INSERT_AFTER(listelm, elm, field)                                 \
-    /* Exercise 2.2: Your code here. */                                        \
+    /* Exercise ok? 2.2: Your code here. */                                        \
     do {                                                                       \
         (elm)->field.le_next = (listelm)->field.le_next;                       \
         if ((listelm)->field.le_next != NULL) {                                \

@@ -119,18 +119,20 @@ void page_init(void) {
     //     pages[i].pp_ref = 0;
     //     LIST_INSERT_HEAD(&page_free_list, &pages[i], pp_link);
     // }
+
     /* Step 3: Mark all memory below `freemem` as used (set `pp_ref` to 1) */
 	/* Exercise 2.3: Your code here. (3/4) */
-        int size = PPN(PADDR(freemem));
-	int i;
-	for(i = 0;i < size;i++){
-                 pages[i].pp_ref = 1;
+	u_long usedpage = PPN(PADDR(freemem));
+	
+	for (u_long i = 0; i < usedpage; i++) {
+		pages[i].pp_ref = 1;
 	}
+	
 	/* Step 4: Mark the other memory as free. */
 	/* Exercise 2.3: Your code here. (4/4) */
-	for(;i<npage;i++){
+	for (u_long i = usedpage; i < npage; i++) {
 		pages[i].pp_ref = 0;
-		LIST_INSERT_HEAD(&page_free_list,pages+i,pp_link);
+		LIST_INSERT_HEAD(&page_free_list, &pages[i], pp_link);
 	}
 
 }
@@ -213,7 +215,7 @@ static int pgdir_walk(Pde *pgdir, u_long va, int create, Pte **ppte) {
 	 *     of memory), return the error.
 	 *   * Otherwise, assign NULL to '*ppte' and return 0.
 	 */
-	/* Exercise 2.6: Your code here. (2/3) */
+	/* Exercise ok? 2.6: Your code here. (2/3) */
     if (!(*pgdir_entryp & PTE_V)) {
         if(create) {
             int ret = page_alloc(&pp);

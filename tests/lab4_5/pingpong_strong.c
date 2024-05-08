@@ -1,6 +1,30 @@
 // Ping-pong a counter between two processes.
 // Only need to start one of these -- splits into two with fork.
 
+/* 这段代码是一个简单的 ping-pong 测试，两个进程（父进程和子进程）之间通过 IPC
+(Inter-Process Communication，进程间通信) 交换信息。
+
+首先，代码定义了四个静态整数数组 A、B、C 和 D，它们都被初始化为 0。
+
+在主函数 main() 中，首先定义了一些变量，包括 who（用于存储 fork
+的返回值，即子进程的 PID）、i（用于接收 IPC
+消息）、isSon（用于标识当前进程是否为子进程）、ptr、father 和 perm。
+
+接着，使用 memset 函数将数组 A、B、C 和 D 的所有元素都设置为 0。
+
+然后，调用 syscall_getenvid() 函数获取当前进程的环境 ID，并将其存储在 father
+变量中。
+
+接下来，调用 fork() 函数创建一个子进程。如果当前进程是父进程（即 fork()
+的返回值不为 0），则通过 ipc_send() 函数向子进程发送一个值为 0 的 IPC
+消息。如果当前进程是子进程（即 fork() 的返回值为 0），则将 isSon 设置为 1。
+
+最后，进入一个无限循环，在循环中，每个进程都会调用 ipc_recv() 函数等待接收 IPC
+消息。当接收到消息后，将消息的值存储在 i 变量中，并打印出当前进程的环境 ID
+和接收到的消息。
+
+这个程序的主要目的是测试和演示进程间的通信，以及 fork() 函数的使用。
+ */
 #include <lib.h>
 
 static int A[1024] __attribute__((aligned(4096)));
@@ -60,7 +84,9 @@ int main() {
 	if (isSon) {
 		if ((who = fork()) == 0) {
 			// grandSon
-			debugf("@@@@grandson %x waiting for son's envid\n", syscall_getenvid());
+			debugf("grandson\n");
+			debugf("@@@@grandson %x waiting for son's envid\n",
+				   syscall_getenvid());
 			i = ipc_recv(&who, 0, 0);
 
 			debugf("@@@@grandson %x got envid %x from son %x\n", syscall_getenvid(), i,
@@ -80,8 +106,8 @@ int main() {
 			if (i != 0) {
 				user_panic("Error when grandson get ack from son!");
 			}
-			// debugf("@@@@grandson %x got ack from son %x\n", syscall_getenvid(),
-			// who);
+			debugf("@@@@grandson %x got ack from son %x\n", syscall_getenvid(),
+			who);
 
 			debugf("@@@@2 %d lab %d strong testcase2\n", ptr[300], ptr[0]);
 			debugf("@@@@2 send is %x recv is %x\n", ptr[100], ptr[200]);
@@ -110,6 +136,7 @@ int main() {
 			if (i != 0) {
 				user_panic("Error when son get Page from grandson!");
 			}
+			debugf("ptr is %08x\n", ptr);
 			debugf("@@@@1 %d lab %d strong testcase1\n", ptr[0], ptr[300]);
 			debugf("@@@@1 send is %x recv is %x\n", ptr[100], ptr[200]);
 

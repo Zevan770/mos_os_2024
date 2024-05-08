@@ -6,10 +6,10 @@ LEAF(tlb_out)
 	mtc0    a0, CP0_ENTRYHI
 	nop
 	/* Step 1: Use 'tlbp' to probe TLB entry */
-	/* Exercise 2.8: Your code here. (1/2) */
-    nop
+	/* Exercise ok? 2.8: Your code here. (1/2) */
+    # nop
     tlbp
-    nop
+    # nop
 
 	nop
 	/* Step 2: Fetch the probe result from CP0.Index */
