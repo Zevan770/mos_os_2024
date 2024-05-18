@@ -1,0 +1,11 @@
+UseTab: Always
+BasedOnStyle: LLVM
+IndentPPDirectives: None
+IndentWidth: 4
+TabWidth: 4
+FixNamespaceComments: false 
+ColumnLimit: 100
+AllowShortBlocksOnASingleLine: false
+AllowShortFunctionsOnASingleLine: None
+AllowShortIfStatementsOnASingleLine: false
+AllowShortLoopsOnASingleLine: false
