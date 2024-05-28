@@ -1,0 +1,15 @@
+{
+    "configurations": [
+        {
+            "name": "MOS debug",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceRoot}/target/mos",
+            "stopAtEntry": false,
+            "cwd": "${workspaceRoot}",
+            "MIMode": "gdb",
+            "miDebuggerPath": "gdb-multiarch",
+            "miDebuggerServerAddress": "localhost:1234"
+        }
+    ]
+}

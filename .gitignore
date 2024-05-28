@@ -1,5 +1,5 @@
 .cache
-.vscode
+compile_commands.json
 .idea
 .gdbrc
 *.b
