@@ -1,4 +1,3 @@
-#include "fd.h"
 #include <fs.h>
 #include <lib.h>
 

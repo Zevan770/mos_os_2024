@@ -1,4 +1,3 @@
-#include "fs.h"
 #include <env.h>
 #include <fsreq.h>
 #include <lib.h>

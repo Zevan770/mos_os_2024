@@ -1,6 +1,7 @@
 #ifndef _USER_FD_H_
 #define _USER_FD_H_ 1
 
+#include <types.h>
 #include <fs.h>
 
 #define debug 0

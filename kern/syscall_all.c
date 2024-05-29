@@ -1,4 +1,3 @@
-#include <bits/stdint-uintn.h>
 #include <env.h>
 #include <io.h>
 #include <mmu.h>
