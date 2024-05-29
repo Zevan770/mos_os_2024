@@ -31,6 +31,7 @@ int main() {
 		debugf("syscall_read_dev is good\n");
 	}
 	buf[i++] = '\n';
+	// debugf("buf is %s\n", buf);
 	for (int j = 0; j < i; j++) {
 		int ch = buf[j];
 		if ((r = syscall_write_dev(&ch, cons, 4)) != 0) {
