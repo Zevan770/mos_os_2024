@@ -1,3 +1,4 @@
+#include "error.h"
 #include <fs.h>
 #include <lib.h>
 
@@ -37,7 +38,7 @@ int open(const char *path, int mode) {
 
 	// Step 2: Prepare the 'fd' using 'fsipc_open' in fsipc.c.
 	/* Exercise 5.9: Your code here. (2/5) */
-	fsipc_open(path, mode, fd);
+	try(fsipc_open(path, mode, fd));
 
 	// Step 3: Set 'va' to the address of the page where the 'fd''s data is cached, using
 	// 'fd2data'. Set 'size' and 'fileid' correctly with the value in 'fd' as a 'Filefd'.
@@ -53,7 +54,7 @@ int open(const char *path, int mode) {
 	// Step 4: Map the file content using 'fsipc_map'.
 	for (int i = 0; i < size; i += PTMAP) {
 		/* Exercise 5.9: Your code here. (4/5) */
-		fsipc_map(fileid, i, va + i);
+		try(fsipc_map(fileid, i, va + i));
 
 	}
 

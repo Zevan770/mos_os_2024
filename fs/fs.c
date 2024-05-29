@@ -1,3 +1,4 @@
+#include "lib.h"
 #include "serv.h"
 #include <mmu.h>
 
@@ -144,8 +145,8 @@ int map_block(u_int blockno) {
 
 	// Step 2: Alloc a page in permission 'PTE_D' via syscall.
 	// Hint: Use 'disk_addr' for the virtual address.
-	/* Exercise 5.7: Your code here. (2/5) */
-	try(syscall_mem_alloc(0, disk_addr(blockno), 0));
+	/* Exercise 5.7 !: Your code here. (2/5) */
+	try(syscall_mem_alloc(env->env_id, disk_addr(blockno), PTE_D));
 
 	return 0;
 }
@@ -167,8 +168,8 @@ void unmap_block(u_int blockno) {
 	}
 
 	// Step 3: Unmap the virtual address via syscall.
-	/* Exercise 5.7: Your code here. (5/5) */
-	syscall_mem_unmap(0, va);
+	/* Exercise 5.7 !: Your code here. (5/5) */
+	syscall_mem_unmap(env->env_id, va);
 
 	user_assert(!block_is_mapped(blockno));
 }
@@ -195,8 +196,8 @@ int block_is_free(u_int blockno) {
 void free_block(u_int blockno) {
 	// You can refer to the function 'block_is_free' above.
 	// Step 1: If 'blockno' is invalid (0 or >= the number of blocks in 'super'), return.
-	/* Exercise 5.4: Your code here. (1/2) */
-	if (super == 0 || blockno >= super->s_nblocks) {
+	/* Exercise 5.4 ?: Your code here. (1/2) */
+	if (blockno == 0 || blockno >= super->s_nblocks) {
 		return;
 	}
 
@@ -519,9 +520,10 @@ int dir_lookup(struct File *dir, char *name, struct File **file) {
 			// If we find the target file, set '*file' to it and set up its 'f_dir'
 			// field.
 			/* Exercise 5.8: Your code here. (3/3) */
-			if (strcmp(f->f_name, name)) {
+			if (strcmp(f->f_name, name) == 0) {
 				f->f_dir = dir;
 				*file = f;
+				return 0;
 			}
 
 		}
