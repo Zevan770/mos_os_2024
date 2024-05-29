@@ -193,6 +193,7 @@ int main() {
 	debugf("open large file: OK\n");
 
 	// test remove
+    debugf("test remove\n");
 	if ((r = close(fdnum)) < 0) {
 		user_panic("cannot close fd: %d", r);
 	}

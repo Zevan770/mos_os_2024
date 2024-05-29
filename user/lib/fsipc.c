@@ -123,12 +123,12 @@ int fsipc_remove(const char *path) {
 	struct Fsreq_remove *req = (struct Fsreq_remove *)fsipcbuf;
 
 	// Step 3: Copy 'path' into the path in 'req' using 'strcpy'.
-	/* Exercise 5.12: Your code here. (2/3) */
-	strcpy((char *)path, req->req_path);
+	/* Exercise 5.12 !: Your code here. (2/3) */
+	strcpy(req->req_path, (char *)path);
 
 	// Step 4: Send request to the server using 'fsipc'.
-	/* Exercise 5.12: Your code here. (3/3) */
-	return fsipc(0, req, 0, 0);
+	/* Exercise 5.12 !: Your code here. (3/3) */
+	return fsipc(FSREQ_REMOVE, req, 0, 0);
 
 }
 
