@@ -1,3 +1,4 @@
+#include "fd.h"
 #include <env.h>
 #include <lib.h>
 #include <mmu.h>
@@ -107,6 +108,11 @@ static int _pipe_is_closed(struct Fd *fd, struct Pipe *p) {
 	// Keep retrying until 'env->env_runs' is unchanged before and after
 	// reading the reference counts.
 	/* Exercise 6.1: Your code here. (1/3) */
+	do {
+		runs = env->env_runs;
+	} while (env->env_runs != runs);
+	fd_ref = pageref(fd);
+	pipe_ref = pageref(p);
 
 	return fd_ref == pipe_ref;
 }
@@ -137,6 +143,23 @@ static int pipe_read(struct Fd *fd, void *vbuf, u_int n, u_int offset) {
 	//    of bytes read so far.
 	//  - Otherwise, keep yielding until the buffer isn't empty or the pipe is closed.
 	/* Exercise 6.1: Your code here. (2/3) */
+	p = fd2data(fd);
+	rbuf = (char *)vbuf;
+	for (i = 0; i < n; i++) {
+		if (_pipe_is_closed(fd, p)) {
+			return i;
+		}
+		if (p->p_buf[p->p_rpos % PIPE_SIZE] != 0) {
+			rbuf[i] = p->p_buf[p->p_rpos % PIPE_SIZE];
+			p->p_buf[p->p_rpos % PIPE_SIZE] = 0;
+			p->p_rpos++;
+		} else {
+			if (i > 0) {
+				return i;
+			}
+			syscall_yield();
+		}
+	}
 
 	user_panic("pipe_read not implemented");
 }
@@ -166,6 +189,24 @@ static int pipe_write(struct Fd *fd, const void *vbuf, u_int n, u_int offset) {
 	//  - If the pipe isn't closed, keep yielding until the buffer isn't full or the
 	//    pipe is closed.
 	/* Exercise 6.1: Your code here. (3/3) */
+	p = fd2data(fd);
+	wbuf = (char *)vbuf;
+	for (i = 0; i < n; i++) {
+		if (_pipe_is_closed(fd, p)) {
+			return i;
+		}
+		if (p->p_buf[p->p_wpos % PIPE_SIZE] == 0) {
+			p->p_buf[p->p_wpos % PIPE_SIZE] = wbuf[i];
+			p->p_wpos++;
+		} else {
+			if (i > 0) {
+				return i;
+			}
+			syscall_yield();
+		}
+	}
+
+
 
 	user_panic("pipe_write not implemented");
 
