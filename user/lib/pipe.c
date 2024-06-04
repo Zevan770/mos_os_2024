@@ -148,14 +148,16 @@ static int pipe_read(struct Fd *fd, void *vbuf, u_int n, u_int offset) {
 		while (p->p_rpos >= p->p_wpos) {
 			if (i > 0 || _pipe_is_closed(fd, p)) {
 				return i;
+			} else {
+				syscall_yield();
 			}
-			syscall_yield();
 		}
 		rbuf[i] = p->p_buf[p->p_rpos % PIPE_SIZE];
 		p->p_rpos++;
 	}
 	
-	user_panic("pipe_read not implemented");
+	// user_panic("pipe_read not implemented");
+	return n;
 }
 
 /* Overview:
@@ -189,14 +191,15 @@ static int pipe_write(struct Fd *fd, const void *vbuf, u_int n, u_int offset) {
 		while (p->p_wpos - p->p_rpos >= PIPE_SIZE) {
 			if (_pipe_is_closed(fd, p)) {
 				return i;
+			} else {
+				syscall_yield();
 			}
-			syscall_yield();
 		}
 		p->p_buf[p->p_wpos % PIPE_SIZE] = wbuf[i];
 		p->p_wpos++;
 	}
 	
-	user_panic("pipe_write not implemented");
+	// user_panic("pipe_write not implemented");
 
 	return n;
 }
