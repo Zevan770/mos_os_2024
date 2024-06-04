@@ -122,8 +122,7 @@ int spawn(char *prog, char **argv) {
 	int r;
 	u_char elfbuf[512];
 	/* Exercise 6.4: Your code here. (1/6) */
-	if (readn(fd, elfbuf, sizeof(Elf32_Ehdr)) != sizeof(Elf32_Ehdr)) {
-		r = -E_NOT_EXEC;
+	if ((r = readn(fd, elfbuf, sizeof(Elf32_Ehdr))) < 0 || r != sizeof(Elf32_Ehdr)) {
 		goto err;
 	}
 
@@ -138,7 +137,8 @@ int spawn(char *prog, char **argv) {
 	// If the syscall fails, set 'r' and 'goto err'.
 	u_int child;
 	/* Exercise 6.4: Your code here. (2/6) */
-	if ((child = syscall_exofork()) < 0) {
+	child = syscall_exofork();
+	if (child < 0) {
 		r = child;
 		goto err;
 	}
@@ -147,7 +147,7 @@ int spawn(char *prog, char **argv) {
 	// 'goto err1' if that fails.
 	u_int sp;
 	/* Exercise 6.4: Your code here. (3/6) */
-	if ((r = init_stack(child, argv, &sp) < 0)) {
+	if ((r = init_stack(child, argv, &sp)) < 0) {
 		goto err1;
 	}
 
@@ -160,8 +160,7 @@ int spawn(char *prog, char **argv) {
 		// 'goto err1' on failure.
 		// You may want to use 'seek' and 'readn'.
 		/* Exercise 6.4: Your code here. (4/6) */
-		if (seek(fd, ph_off) < 0) {
-			r = -E_NOT_EXEC;
+		if ((r = seek(fd, ph_off)) < 0 || (r = readn(fd, elfbuf, ehdr->e_phentsize)) < 0) {
 			goto err1;
 		}
 
@@ -172,8 +171,7 @@ int spawn(char *prog, char **argv) {
 			// using 'read_map()'.
 			// 'goto err1' if that fails.
 			/* Exercise 6.4: Your code here. (5/6) */
-			if (read_map(fd, ph->p_offset, &bin) < 0) {
-				r = -E_NOT_EXEC;
+			if ((r = read_map(fd, ph->p_offset, &bin)) < 0) {
 				goto err1;
 			}
 

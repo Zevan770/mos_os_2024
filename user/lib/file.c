@@ -1,4 +1,3 @@
-#include "error.h"
 #include <fs.h>
 #include <lib.h>
 

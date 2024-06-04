@@ -1,4 +1,3 @@
-#include "fd.h"
 #include <env.h>
 #include <lib.h>
 #include <mmu.h>
@@ -146,7 +145,7 @@ static int pipe_read(struct Fd *fd, void *vbuf, u_int n, u_int offset) {
 	p = fd2data(fd);
 	rbuf = (char *)vbuf;
 	for (i = 0; i < n; i++) {
-		while (p->p_rpos - p->p_wpos >= 0) {
+		while (p->p_rpos >= p->p_wpos) {
 			if (i > 0 || _pipe_is_closed(fd, p)) {
 				return i;
 			}
