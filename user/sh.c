@@ -74,13 +74,14 @@ int parsecmd(char **argv, int *rightpipe) {
 		switch (c) {
 		case 0:
 			return argc;
+		// 这是一个word
 		case 'w':
 			if (argc >= MAXARGS) {
 				debugf("too many arguments\n");
 				exit();
 			}
-			argv[argc++] = t;
-			break;
+            argv[argc++] = t;
+            break;
 		case '<':
 			if (gettoken(0, &t) != 'w') {
 				debugf("syntax error: < not followed by word\n");
