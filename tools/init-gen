@@ -1,7 +1,10 @@
 #!/bin/bash
 set -e
 
+out=""
 for s in "$@"; do
+	# 去掉前导斜杠
+	s="${s#/}"
 	name="$(echo "$s/" | cut -f1 -d/)"
 	pri="$(echo "$s/" | cut -f2 -d/)"
 	if [ -z "$name" ]; then
@@ -26,4 +29,4 @@ echo 'void mips_init(u_int argc, char **argv, char **penv, u_int ram_low_size) {
 
 	schedule(0);
 	panic("init.c:\tend of mips_init() reached!");
-}' > include/generated/init_override.h
+}' >include/generated/init_override.h
