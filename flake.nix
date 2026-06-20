@@ -28,6 +28,9 @@
           pkgsCross.buildPackages.gcc # mipsel-linux-gnu-gcc
           pkgsCross.buildPackages.binutils # 包含 ld, objdump 等
           pkgs.gdb # 默认就是多架构的
+          (pkgs.writeShellScriptBin "gdb-multiarch" ''
+            exec ${pkgs.gdb}/bin/gdb "$@"
+          '')
           pkgs.qemu # 提供 qemu-system-mipsel
           pkgs.gnumake # make
           pkgs.clang-tools
