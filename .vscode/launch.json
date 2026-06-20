@@ -4,9 +4,9 @@
             "name": "MOS debug",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceRoot}/target/mos",
+            "program": "${workspaceFolder}/target/mos",
             "stopAtEntry": false,
-            "cwd": "${workspaceRoot}",
+            "cwd": "${workspaceFolder}",
             "MIMode": "gdb",
             "miDebuggerPath": "gdb-multiarch",
             "miDebuggerServerAddress": "localhost:1234"
