@@ -30,6 +30,7 @@
           pkgs.gdb # 默认就是多架构的
           pkgs.qemu # 提供 qemu-system-mipsel
           pkgs.gnumake # make
+          pkgs.clang-tools
           pkgs.gcc # 主机原生 gcc（编译 host 工具）
           pkgs.binutils # 主机工具（可选）
         ];
