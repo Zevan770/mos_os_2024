@@ -6,10 +6,3 @@ vim.api.nvim_create_autocmd("BufWrite", {
 		vim.secure.trust({ action = "allow", bufnr = args.buf })
 	end,
 })
-
-vim.lsp.config("clangd", {
-	cmd = {
-		"clangd",
-		"--query-driver=**",
-	},
-})
