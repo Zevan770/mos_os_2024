@@ -27,7 +27,7 @@
         buildInputs = [
           pkgsCross.buildPackages.gcc # mipsel-linux-gnu-gcc
           pkgsCross.buildPackages.binutils # 包含 ld, objdump 等
-          pkgs.gdb.multitarget # 多架构 gdb
+          pkgs.gdb # 默认就是多架构的
           pkgs.qemu # 提供 qemu-system-mipsel
           pkgs.gnumake # make
           pkgs.gcc # 主机原生 gcc（编译 host 工具）

@@ -18,3 +18,4 @@ __pycache__
 *.pyc
 *.pyo
 .qemu_log
+/.direnv/bin
