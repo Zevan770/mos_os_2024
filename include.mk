@@ -2,7 +2,7 @@
 ENDIAN         := EL
 
 QEMU           := qemu-system-mipsel
-CROSS_COMPILE  := mips-linux-gnu-
+CROSS_COMPILE  ?= mips-linux-gnu-
 CC             := $(CROSS_COMPILE)gcc
 CFLAGS         += --std=gnu99 -$(ENDIAN) -G 0 -mno-abicalls -fno-pic \
                   -ffreestanding -fno-stack-protector -fno-builtin \

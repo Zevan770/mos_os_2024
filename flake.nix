@@ -36,9 +36,7 @@
 
         # 可设置环境变量，让项目 Makefile 直接使用
         shellHook = ''
-          export CROSS_COMPILE=mipsel-linux-gnu-
-          export CC=${pkgsCross.buildPackages.gcc}/bin/mipsel-linux-gnu-gcc
-          export LD=${pkgsCross.buildPackages.binutils}/bin/mipsel-linux-gnu-ld
+          export CROSS_COMPILE=mipsel-unknown-linux-gnu-
           export QEMU=qemu-system-mipsel
         '';
       };
