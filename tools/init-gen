@@ -3,8 +3,6 @@ set -e
 
 out=""
 for s in "$@"; do
-	# 去掉前导斜杠
-	s="${s#/}"
 	name="$(echo "$s/" | cut -f1 -d/)"
 	pri="$(echo "$s/" | cut -f2 -d/)"
 	if [ -z "$name" ]; then
