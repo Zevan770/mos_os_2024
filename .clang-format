@@ -1,18 +1,23 @@
-UseTab: Always
+UseTab: ForIndentation
 BasedOnStyle: LLVM
 IndentPPDirectives: None
 IndentWidth: 4
 TabWidth: 4
 FixNamespaceComments: false
-ColumnLimit: 0 # 设为0 = 不限制行宽，不会折行
+ColumnLimit: 0
+CommentPragmas: '^'
 AllowShortBlocksOnASingleLine: false
 AllowShortFunctionsOnASingleLine: None
 AllowShortIfStatementsOnASingleLine: false
 AllowShortLoopsOnASingleLine: false
 ReflowComments: false
-
-# 关键：完全不动注释和空格
-AlignTrailingComments: false # 不对齐尾随注释
+AlignTrailingComments: false
 AlignConsecutiveAssignments: false
 AlignConsecutiveDeclarations: false
-SpaceBeforeParens: false
+SpacesBeforeTrailingComments: 1
+SpacesInLineCommentPrefix:
+  Minimum: 1
+  Maximum: -1
+
+# 关键：保留 if/for/while 后面的空格
+SpaceBeforeParens: ControlStatements
