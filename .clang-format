@@ -4,9 +4,15 @@ IndentPPDirectives: None
 IndentWidth: 4
 TabWidth: 4
 FixNamespaceComments: false
-ColumnLimit: 100
+ColumnLimit: 0 # 设为0 = 不限制行宽，不会折行
 AllowShortBlocksOnASingleLine: false
 AllowShortFunctionsOnASingleLine: None
 AllowShortIfStatementsOnASingleLine: false
 AllowShortLoopsOnASingleLine: false
 ReflowComments: false
+
+# 关键：完全不动注释和空格
+AlignTrailingComments: false # 不对齐尾随注释
+AlignConsecutiveAssignments: false
+AlignConsecutiveDeclarations: false
+SpaceBeforeParens: false
