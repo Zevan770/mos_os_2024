@@ -7,10 +7,10 @@ vim.api.nvim_create_autocmd("BufWrite", {
 	end,
 })
 
-vim.lsp.config("ctags_lsp", {
-	cmd = { "ctags-lsp" },
-	filetypes = { "ruby", "c" },
-})
-
-vim.lsp.enable("ctags_lsp")
-vim.lsp.enable("clangd", false)
+-- vim.lsp.config("ctags_lsp", {
+-- 	cmd = { "ctags-lsp" },
+-- 	filetypes = { "ruby", "c" },
+-- })
+--
+-- vim.lsp.enable("ctags_lsp")
+-- vim.lsp.enable("clangd", false)

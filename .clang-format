@@ -4,17 +4,18 @@ IndentPPDirectives: None
 IndentWidth: 4
 TabWidth: 4
 FixNamespaceComments: false
-ColumnLimit: 0
+ColumnLimit: 100
 CommentPragmas: '^'
 AllowShortBlocksOnASingleLine: false
 AllowShortFunctionsOnASingleLine: None
 AllowShortIfStatementsOnASingleLine: false
 AllowShortLoopsOnASingleLine: false
 ReflowComments: false
-AlignTrailingComments: false
+AlignTrailingComments:
+  Kind: Leave
 AlignConsecutiveAssignments: false
 AlignConsecutiveDeclarations: false
-SpacesBeforeTrailingComments: 1
+# SpacesBeforeTrailingComments: 1
 SpacesInLineCommentPrefix:
   Minimum: 1
   Maximum: -1
