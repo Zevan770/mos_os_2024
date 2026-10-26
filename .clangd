@@ -1,0 +1,21 @@
+# 本项目是 freestanding 交叉编译内核（构建机 x86_64 -> 目标 mipsel）。
+# 内核代码在 clangd 分析时不应搜到宿主 glibc 头（否则 gnu/stubs-32.h 会因
+# 32 位目标命中 64 位宿主 glibc 而报 file not found）。
+# 只允许追加无绝对路径的参数；禁止写入任何 /nix/store 路径。
+If:
+  PathMatch:
+    - (^|/)lib/.*
+    - (^|/)init/.*
+    - (^|/)kern/.*
+    - (^|/)user/.*
+    - (^|/)fs/.*
+    - (^|/)include/.*
+CompileFlags:
+  # 让 clangd 按 clang 驱动解析（不再查询真实 gcc 的系统 include 路径）
+  Compiler: clang
+  Add:
+    - --target=mipsel-unknown-linux-gnu
+    # 指向一个不存在的 gcc 安装（相对路径），禁用 clang 的 GCC 安装检测，
+    # 避免把宿主 x86_64 的 gcc/glibc 头注入 mipsel 内核分析。
+    - --gcc-toolchain=.
+    - -nostdlibinc
