@@ -1,5 +1,5 @@
 {
-  description = "MIPS 微内核开发环境 (小端, 4kc)";
+  description = "MIPS 微内核开发环境 (小端, mips32r2)";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -30,6 +30,26 @@
       # mipsel-unknown-linux-gnu-gcc —— 是同一个三元组的不同写法。
       crossPrefix = pkgsCross.buildPackages.gcc.targetPrefix;
 
+      # qemu 包装：把命令行里的 `-cpu 4Kc` 换成 `-cpu 24Kc`。
+      # 原因：include.mk 用 -march=mips32r2 编译内核，而 GCC 15 会生成
+      # MIPS32r2 专属指令（ins/seb，如 print_num 的 VLA 对齐），4Kc 是 MIPS32r1 核，
+      # 一执行就触发 reserved instruction 异常（异常处理器又复用 printk，`$` 无限递归，内核挂死）。
+      # 24Kc 是 MIPS32r2 核，与编译目标一致，裸机串口输出与 4Kc 完全等价。
+      # 不放 Makefile 改 -cpu：Makefile/include.mk 是课程文件，不能动。
+      qemu-system-mipsel = pkgs.writeShellScriptBin "qemu-system-mipsel" ''
+        args=()
+        want_cpu=0
+        for a in "$@"; do
+          if [ "$want_cpu" = 1 ]; then
+            if [ "$a" = "4Kc" ]; then a="24Kc"; fi
+            want_cpu=0
+          fi
+          if [ "$a" = "-cpu" ]; then want_cpu=1; fi
+          args+=("$a")
+        done
+        exec ${pkgs.qemu}/bin/qemu-system-mipsel "''${args[@]}"
+      '';
+
     in
     {
       devShells.${system}.default = pkgs.mkShell {
@@ -44,6 +64,7 @@
           (pkgs.writeShellScriptBin "gdb-multiarch" ''
             exec ${pkgs.gdb}/bin/gdb "$@"
           '')
+          qemu-system-mipsel # 包装版 qemu：-cpu 4Kc -> 24Kc，须在 pkgs.qemu 之前
           pkgs.qemu # 提供 qemu-system-mipsel
           pkgs.gnumake # make
           pkgs.bear
