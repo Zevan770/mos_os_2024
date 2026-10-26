@@ -46,6 +46,7 @@
           '')
           pkgs.qemu # 提供 qemu-system-mipsel
           pkgs.gnumake # make
+          pkgs.bear
           pkgs.clang-tools # clangd/clang-format 供 IDE
         ];
 
